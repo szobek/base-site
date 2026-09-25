@@ -1,0 +1,66 @@
+# Titkok
+**/.env
+**/.env.*
+!**/.env.example
+**/auth.json
+
+# Laravel
+/backend/vendor
+/backend/node_modules
+/backend/public/build
+/backend/public/hot
+/backend/public/storage
+/backend/public/fonts-manifest.dev.json
+/backend/storage/*.key
+/backend/storage/pail
+/backend/storage/logs/*
+!/backend/storage/logs/.gitignore
+/backend/storage/framework/cache/data/*
+!/backend/storage/framework/cache/data/.gitignore
+/backend/storage/framework/sessions/*
+!/backend/storage/framework/sessions/.gitignore
+/backend/storage/framework/views/*
+!/backend/storage/framework/views/.gitignore
+/backend/storage/framework/testing/*
+!/backend/storage/framework/testing/.gitignore
+/backend/bootstrap/cache/*
+!/backend/bootstrap/cache/.gitignore
+/backend/database/*.sqlite
+/backend/database/*.sqlite-*
+/backend/.phpunit.cache
+/backend/.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+.phpactor.json
+_ide_helper.php
+
+# Angular
+/frontend/node_modules
+/frontend/dist
+/frontend/tmp
+/frontend/out-tsc
+/frontend/bazel-out
+/frontend/.angular
+/frontend/coverage
+/frontend/.sass-cache
+/frontend/typings
+
+# Naplók
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Szerkesztők és rendszer
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea
+.nova
+.zed
+.fleet
+*.suo
+*.user
+*.sublime-workspace
+.history
