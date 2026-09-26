@@ -23,9 +23,11 @@ Ez egy újrafelhasználható weboldal-alap, nem egy kész ügyféloldal. Norbert
 - Hírek: `posts`, slug a címből, a `new` slug `hir` lesz, az ütközés `-2`. A slug update-nél stabil, a route key a slug. Állapot `draft` / `published`. A body szanitált HTML (`HtmlSanitizer`): p, br, strong, b, em, i, u, h2, h3, ul, ol, li, blockquote, a, img. A `div` `p` lesz. Kép osztály: csak `size-25|50|75|100` és `align-left|center|right`. A script, a style és az on* attribútum kiesik.
 - Képelrendezés: nem float. A kép blokk, a méret szélesség, az igazítás margin. A következő szöveg a sor elején kezdődik. Ugyanez a CSS a szerkesztőben és a `.post-body`-n.
 - Bevezető: ha a mező üres, `PostService` a body szövegéből gyártja, blokkok között szóközzel, 180 karakter. A cikkoldalon (`post-view.component.ts` `lead()`) csak akkor látszik, ha nem a body szövegének az eleje. A listán mindig látszik.
-- Admin: `GET/PATCH /api/admin/users`, szerepváltás. Az utolsó admint nem lehet lefokozni. `GET /api/settings` nyilvános, `PUT /api/admin/settings` csak az oldal nevét menti (`site_name`). A lábléc szövege kikerült a beállításból.
-- Lábléc: egy komponens, `frontend/src/app/layout/footer.component.ts`. A HTML-t ott kell személyre szabni, nem adatbázisból.
-- Angular útvonalak: vendég login/register/forgot; nyilvános reset és verify; a shell `authGuard` mögött. `posts/new` a `posts/:slug` előtt van. Admin: `adminGuard`.
+- Admin: `GET/PATCH /api/admin/users`, szerepváltás. Az utolsó admint nem lehet lefokozni. `GET /api/settings` nyilvános, `PUT /api/admin/settings` menti a `site_name`, `contact_address`, `contact_phone`, `contact_email` mezőket. A kapcsolat mezők üresek maradhatnak; ha egy kulcs nincs a kérésben, a tárolt érték megmarad. A lábléc szövege kikerült a beállításból.
+- Lábléc: egy komponens, `frontend/src/app/layout/footer.component.ts`. A HTML-t ott kell személyre szabni, nem adatbázisból. Linkeli az impresszumot, az adatvédelmet, a kapcsolatot és a belépést.
+- Nyilvános oldalak, auth nélkül: `/impresszum` és `/adatvedelem` Angular komponensek, a HTML a fájlban szerkeszthető (`impresszum.component.ts`, `adatvedelem.component.ts`). Nincs hozzájuk API és adatbázistábla. A `/kapcsolat` a beállításokból mutatja a címet, a telefont (`tel:`) és az e-mailt (`mailto:`), ha meg vannak adva. A kapcsolat `POST /api/contact` (percenként 5 egy IP-ről), az üzenet a `contact_messages` táblában landol. Admin: `GET/PATCH/DELETE /api/admin/messages`, felület `/admin/uzenetek`. Levél nem megy ki, a mailer továbbra is log.
+- Nyilvános főoldal: `/` a közzétett cikkeket listázza (`published=1`, így admin tokennel sem jön vázlat). Egy cikk: `/hir/:slug`. A belépés utáni kezdőlap `/app`. A `**` a főoldalra visz.
+- Angular útvonalak: a főoldal és a `/hir/:slug` az auth shell előtt van, `pathMatch: 'full'` a üres úton. Vendég login/register/forgot; nyilvános reset és verify. A shell `authGuard` mögött. `posts/new` a `posts/:slug` előtt van. Admin: `adminGuard`. Belépés és regisztráció után a cél `/app`.
 
 ## Szándékos döntések
 
@@ -37,11 +39,7 @@ Ez egy újrafelhasználható weboldal-alap, nem egy kész ügyféloldal. Norbert
 
 ## Még nincs meg
 
-Ezt Norbert a következőnek mondta, de még nem kérte a megépítését:
-
-1. Nyilvános oldal. A `GET /api/posts` vendégnek a közzétett híreket adja, a felület viszont az egész shellt `authGuard` mögé teszi. Kell egy vendég elrendezés: kezdőlap, hírlista, egy hír. A szerkesztő, a média és az admin maradjon belépés után.
-2. Két fix oldal, impresszum és adatvédelem, ugyanazzal a szanitált szerkesztővel, link a láblécből.
-3. Kapcsolatfelvétel csak utána: név, email, üzenet, admin lista.
+A sablon kész egy kis weboldalra. Új igény oldalanként jön, nem előre.
 
 ## Hol a kód
 
@@ -49,7 +47,7 @@ Ezt Norbert a következőnek mondta, de még nem kérte a megépítését:
 - Auth, profil, jelszó, email: `backend/app/Http/Controllers/Api/`
 - Hír: `PostController`, `PostService`, `HtmlSanitizer`, `PostPolicy`
 - Média: `MediaController`, `MediaService`, `MediaLimits`, `config/media.php`
-- Beállítás: `SettingsController`, `SiteSettings`, `settings` tábla, csak `site_name`
+- Beállítás: `SettingsController`, `SiteSettings`, `settings` tábla. Kulcsok: `site_name`, `contact_address`, `contact_phone`, `contact_email`
 - Felület: `frontend/src/app/pages/`, keret `layout/shell.component.ts`, lábléc `layout/footer.component.ts`
 - Stílus: `frontend/src/styles.scss`
 - Feature tesztek: `backend/tests/Feature/AuthTest.php`, `MediaTest.php`, `PostTest.php`, `AdminTest.php`

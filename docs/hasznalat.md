@@ -5,7 +5,7 @@ Ez egy újrahasználható weboldal-alap. Helyben két cím van:
 - felület: http://localhost:4200/
 - API: http://localhost:8000/api
 
-A felület magyar. A hírek, a média és az admin csak belépés után érhető el.
+A felület magyar. A főoldal a közzétett cikkeket belépés nélkül mutatja. A szerkesztő, a média és az admin csak belépés után érhető el.
 
 ## Indítás
 
@@ -32,6 +32,10 @@ Az első admin, ha lefutott a seeder: `admin@example.com` / `password`. Éles ha
 
 Gmailre küldéshez a `backend/.env` tetején lévő MAIL sorokat a fájlban lévő Gmail-megjegyzés szerint kell cserélni. A jelszó Google alkalmazásjelszó, nem a fiók belépési jelszava. Utána a Laravel szervert újra kell indítani.
 
+## Főoldal
+
+A nyitó cím, http://localhost:4200/ , a közzétett cikkeket listázza. Egy cikk a `/hir/` útvonalon nyílik. A vázlat ide nem kerül. Belépés után az alkalmazás a `/app` címen van.
+
 ## Hírek
 
 A **Hírek** menüpont a lista. **Új bejegyzés** nyitja a szerkesztőt.
@@ -55,8 +59,19 @@ A hírbe beszúrt kép az `images` gyűjteménybe kerül.
 Az **Admin** menüpont csak adminnak jelenik meg.
 
 - **Oldal neve**: a fejlécben, a belépő oldalakon és a böngésző címsorában.
+- **Cím, telefonszám, e-mail**: a kapcsolat oldalon jelenik meg. Üres mező nem látszik.
 - **Felhasználók**: név, email, meg van-e erősítve a cím, szerep (`admin` vagy `felhasználó`). Az utolsó admin szerepét nem lehet elvenni.
 - Innen lehet a hírekre és a médiára lépni.
+
+## Impresszum, adatvédelem, kapcsolat
+
+Ezek belépés nélkül nyílnak, a láblécből is:
+
+- http://localhost:4200/impresszum
+- http://localhost:4200/adatvedelem
+- http://localhost:4200/kapcsolat
+
+Az impresszum és az adatvédelem HTML-je a komponensfájlban van: `frontend/src/app/pages/impresszum.component.ts` és `adatvedelem.component.ts`. A kapcsolat oldalon a cím, a telefonszám és az e-mail az admin **Oldal** űrlapjáról jön. A kapcsolat űrlap neve, emailje és üzenete az **Üzenetek** listában jelenik meg. Email nem megy ki róla.
 
 ## Lábléc
 
