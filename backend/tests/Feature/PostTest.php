@@ -120,6 +120,19 @@ class PostTest extends TestCase
             ->assertJsonPath('data.body', $published->body);
     }
 
+    public function test_published_filter_hides_drafts_from_an_admin(): void
+    {
+        $published = Post::factory()->create(['title' => 'Kint']);
+        Post::factory()->draft()->create();
+
+        Sanctum::actingAs(User::factory()->admin()->create());
+
+        $this->getJson('/api/posts?published=1')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.slug', $published->slug);
+    }
+
     public function test_draft_is_hidden_from_others_and_visible_to_the_author(): void
     {
         $post = Post::factory()->draft()->create();

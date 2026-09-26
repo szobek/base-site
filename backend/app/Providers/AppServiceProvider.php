@@ -31,6 +31,10 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(20)->by($request->user()?->id ?: $request->ip());
         });
 
+        RateLimiter::for('contact', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip());
+        });
+
         ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
             $frontend = rtrim((string) config('app.frontend_url'), '/');
             $email = urlencode($notifiable->getEmailForPasswordReset());

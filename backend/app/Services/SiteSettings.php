@@ -7,24 +7,34 @@ use App\Models\Setting;
 class SiteSettings
 {
     /**
-     * @return array{site_name: string}
+     * @return array{site_name: string, contact_address: string, contact_phone: string, contact_email: string}
      */
     public function all(): array
     {
         return [
             'site_name' => $this->get('site_name'),
+            'contact_address' => $this->get('contact_address'),
+            'contact_phone' => $this->get('contact_phone'),
+            'contact_email' => $this->get('contact_email'),
         ];
     }
 
     /**
-     * @return array{site_name: string}
+     * @param  array<string, string|null>  $values
+     * @return array{site_name: string, contact_address: string, contact_phone: string, contact_email: string}
      */
-    public function update(string $siteName): array
+    public function update(array $values): array
     {
-        Setting::query()->updateOrCreate(
-            ['key' => 'site_name'],
-            ['value' => $siteName],
-        );
+        foreach (['site_name', 'contact_address', 'contact_phone', 'contact_email'] as $key) {
+            if (! array_key_exists($key, $values)) {
+                continue;
+            }
+
+            Setting::query()->updateOrCreate(
+                ['key' => $key],
+                ['value' => (string) ($values[$key] ?? '')],
+            );
+        }
 
         return $this->all();
     }

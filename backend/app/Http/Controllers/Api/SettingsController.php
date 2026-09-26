@@ -19,7 +19,12 @@ class SettingsController extends Controller
     public function update(UpdateSettingsRequest $request, SiteSettings $settings): JsonResponse
     {
         return response()->json([
-            'data' => $settings->update($request->string('site_name')->toString()),
+            'data' => $settings->update($request->safe()->only([
+                'site_name',
+                'contact_address',
+                'contact_phone',
+                'contact_email',
+            ])),
         ]);
     }
 }

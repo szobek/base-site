@@ -14,4 +14,10 @@ return [
 
     'site_name' => 'Base',
 
+    'contact_address' => '',
+
+    'contact_phone' => '',
+
+    'contact_email' => '',
+
 ];

@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\AdminUserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\ContactMessageController;
 use App\Http\Controllers\Api\EmailVerificationController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\PasswordResetController;
@@ -41,11 +43,15 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::get('settings', [SettingsController::class, 'show']);
+Route::post('contact', [ContactController::class, 'store'])->middleware('throttle:contact');
 
 Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('users', [AdminUserController::class, 'index']);
     Route::patch('users/{user}', [AdminUserController::class, 'update']);
     Route::put('settings', [SettingsController::class, 'update']);
+    Route::get('messages', [ContactMessageController::class, 'index']);
+    Route::patch('messages/{message}', [ContactMessageController::class, 'read']);
+    Route::delete('messages/{message}', [ContactMessageController::class, 'destroy']);
 });
 
 Route::middleware('sanctum.optional')->group(function () {

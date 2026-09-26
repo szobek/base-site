@@ -20,19 +20,23 @@ class PostController extends Controller
     {
         $this->authorize('viewAny', Post::class);
 
-        $user = $request->user();
+        $query = Post::query()->with('user');
 
-        $posts = Post::query()
-            ->with('user')
-            ->when(
+        if ($request->boolean('published')) {
+            $query->published()->latest('published_at');
+        } else {
+            $user = $request->user();
+
+            $query->when(
                 $user?->isAdmin(),
-                fn ($query) => $query,
-                fn ($query) => $user
-                    ? $query->where(fn ($inner) => $inner->published()->orWhere('user_id', $user->id))
-                    : $query->published(),
-            )
-            ->latest()
-            ->paginate(12);
+                fn ($builder) => $builder,
+                fn ($builder) => $user
+                    ? $builder->where(fn ($inner) => $inner->published()->orWhere('user_id', $user->id))
+                    : $builder->published(),
+            )->latest();
+        }
+
+        $posts = $query->paginate(12);
 
         return PostResource::collection($posts);
     }
